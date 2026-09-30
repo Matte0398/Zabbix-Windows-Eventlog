@@ -1,0 +1,70 @@
+zabbix_export:
+  version: "7.0"
+  template_groups:
+    - uuid: 846977d1dfed4968bc5f8bdb363285bc
+      name: "Templates/Operating systems"
+  templates:
+    - uuid: 523f9bbdc65f49d28e9ba18f663224e4
+      template: "Template Windows Event Log"
+      name: "Template Windows Event Log"
+      description: |
+        Template for Windows Event Log Monitoring.
+        To view the list of monitored events, check the list of items
+
+        Author: Matteo Z.
+      groups:
+        - name: "Templates/Operating systems"
+      items:
+        - uuid: a6f4295f9e1440788128ae80340aa802
+          name: "Commvault - Error event"
+          type: ZABBIX_ACTIVE
+          key: 'eventlog[Application,,"Error|Critical","ContentStore",256,,skip]'
+          value_type: LOG
+          trends: "0"
+          description: "It monitors the Windows event ID 256 (ContentStore - severity: Error or Critical)"
+          tags:
+            - tag: component
+              value: commvault_event
+          triggers:
+            - uuid: f3e311f4495346bcb423a1c28b319508
+              expression: 'logeventid(/Template Windows Event Log/eventlog[Application,,"Error|Critical","ContentStore",256,,skip])=1'
+              name: "Commvault error event - {ITEM.LASTVALUE}"
+              priority: HIGH
+              manual_close: "YES"
+        - uuid: 040847fe6a054317970d1bcd7d591642
+          name: "Commvault - Warning event"
+          type: ZABBIX_ACTIVE
+          key: 'eventlog[Application,,"Warning","ContentStore",256,,skip]'
+          value_type: LOG
+          trends: "0"
+          description: "It monitors the Windows event ID 256 (ContentStore - severity: Warning)"
+          tags:
+            - tag: component
+              value: commvault_event
+          triggers:
+            - uuid: b6b20cf206c44d21866752a488b99758
+              expression: 'logeventid(/Template Windows Event Log/eventlog[Application,,"Warning","ContentStore",256,,skip])=1'
+              name: "Commvault warning event - {ITEM.LASTVALUE}"
+              priority: WARNING
+              manual_close: "YES"
+        - uuid: 340a300821f74305afc6d863e4c2fff9
+          name: BlueScreen
+          type: ZABBIX_ACTIVE
+          key: 'eventlog[System,,"Error|Critical",,6008,,skip]'
+          value_type: LOG
+          trends: "0"
+          description: "It monitors the Windows event ID 6008 (BlueScreen)"
+          tags:
+            - tag: component
+              value: bluescreen_event
+          triggers:
+            - uuid: dedbe6dffa9b4aa081490b518eac889e
+              expression: 'logeventid(/Template Windows Event Log/eventlog[System,,"Error|Critical",,6008,,skip])=1'
+              name: "BlueScreen detected"
+              priority: HIGH
+              manual_close: "YES"
+      tags:
+        - tag: class
+          value: os
+        - tag: target
+          value: windows
