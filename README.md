@@ -1,4 +1,4 @@
-# Zabbix Windows Event Log Template
+# Zabbix Windows Event Log
 
 Zabbix template for monitoring Windows events log through active agent checks.
 
